@@ -39,7 +39,7 @@ def _make_source(engine, duration):
 def test_dt_whammy_bypass_is_identity():
     """With bypass on and harmony_mode off, the mono pedal effect must be transparent."""
     duration = 1.0
-    engine = daw.RenderEngine(SAMPLE_RATE, buffer_size=64)
+    engine = daw.RenderEngine(SAMPLE_RATE, 64)
 
     source = _make_source(engine, duration)
 
@@ -64,7 +64,7 @@ def test_dt_whammy_bypass_is_identity():
 def test_dt_whammy_mono_pedal_dive():
     """Riding the pedal from heel to toe should smoothly change the pitch shift."""
     duration = 2.0
-    engine = daw.RenderEngine(SAMPLE_RATE, buffer_size=64)
+    engine = daw.RenderEngine(SAMPLE_RATE, 64)
 
     source = _make_source(engine, duration)
 
@@ -91,7 +91,7 @@ def test_dt_whammy_mono_pedal_dive():
     assert np.mean(np.abs(audio)) > 1e-4
 
     # A full pedal dive (up an octave) must differ audibly from the un-shifted (pedal=0) case.
-    engine2 = daw.RenderEngine(SAMPLE_RATE, buffer_size=64)
+    engine2 = daw.RenderEngine(SAMPLE_RATE, 64)
     source2 = _make_source(engine2, duration)
     faust_processor2 = engine2.make_faust_processor("whammy")
     faust_processor2.set_dsp(DSP_PATH)
@@ -112,7 +112,7 @@ def test_dt_whammy_mono_pedal_dive():
 def test_dt_whammy_polyphonic_harmony_chord():
     """Holding several MIDI keys should harmonize the same input into a chord."""
     duration = 2.0
-    engine = daw.RenderEngine(SAMPLE_RATE, buffer_size=64)
+    engine = daw.RenderEngine(SAMPLE_RATE, 64)
 
     source = _make_source(engine, duration)
 
@@ -141,7 +141,7 @@ def test_dt_whammy_polyphonic_harmony_chord():
     assert np.mean(np.abs(audio)) > 1e-4
 
     # The 3-note chord must differ from a single unison note (which is close to dry).
-    engine2 = daw.RenderEngine(SAMPLE_RATE, buffer_size=64)
+    engine2 = daw.RenderEngine(SAMPLE_RATE, 64)
     source2 = _make_source(engine2, duration)
     faust_processor2 = engine2.make_faust_processor("whammy")
     faust_processor2.set_dsp(DSP_PATH)
