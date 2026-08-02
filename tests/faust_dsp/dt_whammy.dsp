@@ -89,10 +89,27 @@ process(sigL, sigR) = outL, outR
 with {
     // Pitch-synchronous window: track the input's fundamental (zero-crossing-rate based,
     // same family of technique dm-Whammy uses) and size the window to ~1 detected period.
+    // Note this only ever tunes window/crossfade size, never shiftAmount (that comes
+    // purely from pedal/mode/harmony_mode above) - so however well or badly the tracker
+    // reads a chord, the actual transposition is unaffected, exactly like the real pedal,
+    // which doesn't need single-note input to shift correctly either.
+    //
+    // A chord (or any polyphonic/broadband input) gives a zero-crossing tracker no single
+    // "right" answer, and it can hunt between the notes present. The slew-limiting
+    // smoother on the final window size (below) keeps that hunting from ever showing up
+    // as an audible click or window-size jump - the window just settles on a stable
+    // average size instead of a real period.
     detectedFreq = (sigL + sigR) * 0.5 : an.pitchTracker(4, 0.02) : max(50) : min(1500);
-    autoWinSamples   = (ma.SR / detectedFreq) : int : max(64) : min(int(40 * 0.001 * ma.SR));
-    manualWinSamples = int(window_ms * 0.001 * ma.SR) : max(64);
-    winSamples = ba.if(auto_window, autoWinSamples, manualWinSamples);
+    autoWinSamples   = (ma.SR / detectedFreq) : max(64) : min(40 * 0.001 * ma.SR);
+    manualWinSamples = window_ms * 0.001 * ma.SR : max(64);
+    // max(64) again *after* smoothing: si.smooth's register starts at 0 and ramps up to
+    // the target, so without a floor here the window would pass through near-zero values
+    // during that ramp - and ef.transpose's internal fmod(_, w) divides by w, so a
+    // near-zero window is a division-by-near-zero that poisons its recursive delay state
+    // with NaN forever after. Clamping only the *target* isn't enough; the smoothed
+    // *output* needs the same floor.
+    winSamples = ba.if(auto_window, autoWinSamples, manualWinSamples)
+        : si.smooth(ba.tau2pole(0.05)) : max(64) : int;
     xfSamples  = int(winSamples * xfade_pct / 100.0) : max(32);
 
     // Pitch-shifting core: a 2-tap crossfaded delay-line shifter (ef.transpose from the

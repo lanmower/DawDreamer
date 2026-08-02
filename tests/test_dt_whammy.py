@@ -235,3 +235,54 @@ def test_dt_whammy_auto_window_is_silence_safe():
 
     audio = engine.get_audio()
     assert np.all(np.isfinite(audio))
+
+
+def _make_chord_source(engine, freqs, duration, amp=0.2):
+    """A real polyphonic input, like strumming a chord into a real Whammy pedal."""
+    n = int(duration * SAMPLE_RATE)
+    t = np.arange(n) / SAMPLE_RATE
+    mono = np.zeros(n, dtype=np.float32)
+    for f in freqs:
+        mono += (amp * np.sin(2.0 * np.pi * f * t)).astype(np.float32)
+    data = np.stack([mono, mono])
+    return engine.make_playback_processor("source", data)
+
+
+@pytest.mark.parametrize("auto_window", [0, 1])
+def test_dt_whammy_handles_polyphonic_chord_input(auto_window):
+    """The real DigiTech Whammy has no trouble with a polyphonic (chord) input signal -
+    it doesn't need single-note input to shift correctly, since the shift amount always
+    comes from pedal/mode, never from pitch tracking. This should hold for us too, with
+    or without auto_window: finite output, no runaway amplitude, and no click/instability
+    spikes worse than what a real chord's own waveform complexity would produce."""
+    duration = 1.5
+    chord = [261.63, 329.63, 392.00]  # a C major triad, like a strummed chord
+    engine = daw.RenderEngine(SAMPLE_RATE, 64)
+
+    source = _make_chord_source(engine, chord, duration + 0.5)
+
+    faust_processor = engine.make_faust_processor("whammy")
+    faust_processor.set_dsp(DSP_PATH)
+    faust_processor.num_voices = 0
+    faust_processor.compile()
+
+    _set_all(faust_processor, "/bypass", 0)
+    _set_all(faust_processor, "/mix", 1)
+    _set_all(faust_processor, "/mode", 0)  # Octave Up
+    _set_all(faust_processor, "/pedal", 1)
+    _set_all(faust_processor, "/auto_window", auto_window)
+
+    engine.load_graph([(source, []), (faust_processor, ["source"])])
+    render(engine, duration=duration)
+
+    audio = engine.get_audio()
+    assert np.all(np.isfinite(audio))
+    assert np.max(np.abs(audio)) < 3.0  # generously bounded, no runaway/explosion
+
+    # No pathological clicks: the biggest single-sample jump should stay within a small
+    # multiple of what the chord's own waveform naturally produces (measured dry).
+    t = np.arange(audio.shape[1]) / SAMPLE_RATE
+    dry = sum(0.2 * np.sin(2 * np.pi * f * t) for f in chord)
+    dry_max_delta = np.max(np.abs(np.diff(dry)))
+    wet_max_delta = np.max(np.abs(np.diff(audio[0])))
+    assert wet_max_delta < dry_max_delta * 10
