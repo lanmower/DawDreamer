@@ -104,10 +104,13 @@ def test_sampler_transpose():
 
     audio = engine.get_audio()
 
-    # Audio was produced and contains no discontinuities (NaN/Inf) from the
-    # per-sample smoothed transpose ramp.
+    # Audio was produced and contains no discontinuities (NaN/Inf). Check energy in
+    # just the attack (the sample is a fast crash transient, and transposing up an
+    # octave plays it back roughly twice as fast, so it decays well within DURATION;
+    # checking the full-buffer mean would be flaky against the transpose amount).
     assert np.all(np.isfinite(audio))
-    assert np.mean(np.abs(audio)) > 0.01
+    attack = audio[:, : int(0.05 * SAMPLE_RATE)]
+    assert np.mean(np.abs(attack)) > 0.01
 
     # An untransposed render of the identical chord should differ from the
     # transposed one (the transpose parameter audibly affects playback).
