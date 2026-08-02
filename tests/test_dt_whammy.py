@@ -36,6 +36,23 @@ def _make_source(engine, duration):
     return engine.make_playback_processor("source", data)
 
 
+def _make_sine_source(engine, freq, duration):
+    """A clean, controlled tone - lets us measure the actual shifted pitch precisely."""
+    n = int(duration * SAMPLE_RATE)
+    t = np.arange(n) / SAMPLE_RATE
+    mono = (0.5 * np.sin(2.0 * np.pi * freq * t)).astype(np.float32)
+    data = np.stack([mono, mono])
+    return engine.make_playback_processor("source", data)
+
+
+def _fft_peak_hz(audio, sr, tail_start_sec):
+    tail = audio[0, int(tail_start_sec * sr) :]
+    window = np.hanning(len(tail))
+    spectrum = np.abs(np.fft.rfft(tail * window))
+    freqs = np.fft.rfftfreq(len(tail), 1.0 / sr)
+    return freqs[np.argmax(spectrum)]
+
+
 def test_dt_whammy_bypass_is_identity():
     """With bypass on and harmony_mode off, the mono pedal effect must be transparent."""
     duration = 1.0
@@ -157,3 +174,64 @@ def test_dt_whammy_polyphonic_harmony_chord():
 
     n = min(audio.shape[1], unison_audio.shape[1])
     assert not np.allclose(audio[:, :n], unison_audio[:, :n], atol=1e-3)
+
+
+@pytest.mark.parametrize(
+    "mode,semitones",
+    [(0, 12), (1, -12), (4, 7), (5, 5), (6, -7)],
+)
+def test_dt_whammy_auto_window_tracks_pitch_accurately(mode, semitones):
+    """auto_window (pitch-synchronous window, ported from dm-Whammy's grain sizing)
+    should track the requested interval much more tightly than a short fixed window,
+    since the window is sized to the input's own detected period."""
+    duration = 1.5
+    input_freq = 220.0
+    engine = daw.RenderEngine(SAMPLE_RATE, 64)
+
+    source = _make_sine_source(engine, input_freq, duration + 0.5)
+
+    faust_processor = engine.make_faust_processor("whammy")
+    faust_processor.set_dsp(DSP_PATH)
+    faust_processor.num_voices = 0
+    faust_processor.compile()
+
+    _set_all(faust_processor, "/bypass", 0)
+    _set_all(faust_processor, "/mix", 1)
+    _set_all(faust_processor, "/mode", mode)
+    _set_all(faust_processor, "/pedal", 1)
+    _set_all(faust_processor, "/auto_window", 1)
+
+    engine.load_graph([(source, []), (faust_processor, ["source"])])
+    render(engine, duration=duration)
+
+    measured = _fft_peak_hz(engine.get_audio(), SAMPLE_RATE, tail_start_sec=0.7)
+    expected = input_freq * 2 ** (semitones / 12)
+    error_semitones = 12 * np.log2(measured / expected)
+
+    assert abs(error_semitones) < 0.5
+
+
+def test_dt_whammy_auto_window_is_silence_safe():
+    """The pitch tracker driving auto_window must not blow up (NaN/Inf) on silence."""
+    duration = 0.5
+    engine = daw.RenderEngine(SAMPLE_RATE, 64)
+
+    silence = np.zeros((2, int(duration * SAMPLE_RATE)), dtype=np.float32)
+    source = engine.make_playback_processor("source", silence)
+
+    faust_processor = engine.make_faust_processor("whammy")
+    faust_processor.set_dsp(DSP_PATH)
+    faust_processor.num_voices = 0
+    faust_processor.compile()
+
+    _set_all(faust_processor, "/bypass", 0)
+    _set_all(faust_processor, "/mix", 1)
+    _set_all(faust_processor, "/mode", 0)
+    _set_all(faust_processor, "/pedal", 1)
+    _set_all(faust_processor, "/auto_window", 1)
+
+    engine.load_graph([(source, []), (faust_processor, ["source"])])
+    render(engine, duration=duration)
+
+    audio = engine.get_audio()
+    assert np.all(np.isfinite(audio))
