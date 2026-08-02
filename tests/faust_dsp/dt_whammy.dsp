@@ -1,5 +1,5 @@
 declare name "DT_Whammy";
-declare description "Ultra-low-latency, glitch-free Whammy/harmonizer pitch shifter (DigiTech Whammy style). With num_voices == 0 it behaves like the real pedal: one continuous mono-in/stereo-out transpose effect driven by an expression pedal and a mode dial. With num_voices > 0 it becomes a polyphonic MIDI-keyboard harmonizer: turn harmony_mode on and each held key transposes the same input signal to that key's interval above/below root_note, and the voices sum into chords.";
+declare description "Ultra-low-latency, glitch-free Whammy/harmonizer pitch shifter (DigiTech Whammy style). With num_voices == 0 it behaves like the real pedal: one continuous mono-in/stereo-out transpose effect driven by an expression pedal and a mode dial. With num_voices > 0 it becomes a polyphonic MIDI-keyboard harmonizer: turn harmony_mode on and each held key transposes the same input signal to that key's interval above/below root_note, and the voices sum into chords. auto_window borrows davemollen/dm-Whammy's idea of sizing the shift window to the input's own detected pitch period instead of a fixed length.";
 declare author "DawDreamer";
 declare license "MIT";
 declare options "[nvoices:8]"; // FaustProcessor.num_voices overrides this at runtime.
@@ -38,8 +38,16 @@ root_note    = hslider("[5]root_note[unit:MIDI][tooltip: key that produces no pi
 glide_ms = hslider("[6]glide_ms[style:knob][unit:ms]", 12, 0.1, 250, 0.1);
 
 // Shifter engine tuning: smaller window = lower latency, larger crossfade = smoother tone.
-window_ms = hslider("[7]window_ms[style:knob][unit:ms][tooltip: pitch-shifter window length, smaller = lower latency]", 15, 5, 40, 0.1);
-xfade_pct = hslider("[8]crossfade_pct[style:knob][unit:%][tooltip: percent of the window used to crossfade the two delay taps]", 50, 10, 90, 1);
+window_ms = hslider("[7]window_ms[style:knob][unit:ms][tooltip: pitch-shifter window length, smaller = lower latency (ignored when auto_window is on)]", 15, 5, 40, 0.1);
+
+// Pitch-synchronous window (inspired by davemollen/dm-Whammy, which sizes its grains to
+// the detected input period rather than a fixed length): when enabled, the window tracks
+// the input's own fundamental instead of window_ms. High-pitched input gets an
+// automatically shorter (lower-latency) window; only genuinely low-pitched input grows
+// the window, and only as far as it needs to for a clean shift.
+auto_window = checkbox("[8]auto_window[tooltip: size the shift window from the input's detected pitch period instead of window_ms]");
+
+xfade_pct = hslider("[9]crossfade_pct[style:knob][unit:%][tooltip: percent of the window used to crossfade the two delay taps]", 50, 10, 90, 1);
 
 // Per-voice MIDI controls (Faust polyphony convention: these exact names are bound to
 // incoming MIDI note/velocity/gate when num_voices > 0; in mono mode they stay at their
@@ -53,9 +61,6 @@ gate = button("gate");                                       // note on/off
 //=====================================================================================
 
 modeShift = (12, -12, 24, -24, 7, 5, -7, -24) : ba.selectn(8, int(mode));
-
-winSamples = int(window_ms * 0.001 * ma.SR) : max(64);
-xfSamples  = int(winSamples * xfade_pct / 100.0) : max(32);
 
 pedalShift   = pedal * modeShift;
 harmonyShift = ba.hz2midikey(max(1, freq)) - root_note;
@@ -73,13 +78,6 @@ voiceEnv   = en.adsr(0.003, 0.03, 1, 0.05, gate);
 voiceLevel = ba.if(harmony_mode, gain * voiceEnv, 1);
 
 //=====================================================================================
-// Pitch-shifting core: a 2-tap crossfaded delay-line shifter (ef.transpose from the
-// Faust standard library). This is the low-latency, smooth whammy engine.
-//=====================================================================================
-
-whammyCore(sig) = (sig : ef.transpose(winSamples, xfSamples, shiftAmount)) * voiceLevel;
-
-//=====================================================================================
 // process: stereo in, stereo out (both channels run through their own shift-engine
 // instance, driven by the same control-rate parameters so the stereo image stays
 // coherent). Runs once directly when num_voices == 0 (classic mono pedal, full dry/wet
@@ -89,6 +87,18 @@ whammyCore(sig) = (sig : ef.transpose(winSamples, xfSamples, shiftAmount)) * voi
 
 process(sigL, sigR) = outL, outR
 with {
+    // Pitch-synchronous window: track the input's fundamental (zero-crossing-rate based,
+    // same family of technique dm-Whammy uses) and size the window to ~1 detected period.
+    detectedFreq = (sigL + sigR) * 0.5 : an.pitchTracker(4, 0.02) : max(50) : min(1500);
+    autoWinSamples   = (ma.SR / detectedFreq) : int : max(64) : min(int(40 * 0.001 * ma.SR));
+    manualWinSamples = int(window_ms * 0.001 * ma.SR) : max(64);
+    winSamples = ba.if(auto_window, autoWinSamples, manualWinSamples);
+    xfSamples  = int(winSamples * xfade_pct / 100.0) : max(32);
+
+    // Pitch-shifting core: a 2-tap crossfaded delay-line shifter (ef.transpose from the
+    // Faust standard library). This is the low-latency, smooth whammy engine.
+    whammyCore(sig) = (sig : ef.transpose(winSamples, xfSamples, shiftAmount)) * voiceLevel;
+
     // No per-voice dry signal in harmony mode - avoids the dry line being summed once
     // per held key. Hold the root_note key itself (0 semitone shift) to add the
     // un-transposed input back into a chord.
