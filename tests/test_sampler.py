@@ -65,3 +65,59 @@ def test_sampler(set_data=False):
 
     audio = engine.get_audio()
     assert np.mean(np.abs(audio)) > 0.01
+
+
+def test_sampler_transpose():
+    """The sampler's global "Transpose" parameter should shift pitch smoothly
+    (no discontinuities/clicks) and apply to every simultaneously-held voice,
+    since the underlying engine is a polyphonic (MPE) synthesiser."""
+
+    def get_par_index(desc, par_name):
+        for parDict in desc:
+            if parDict["name"] == par_name:
+                return parDict["index"]
+        raise ValueError(f"Parameter '{par_name}' not found.")
+
+    DURATION = 1.0
+
+    engine = daw.RenderEngine(SAMPLE_RATE, BUFFER_SIZE)
+
+    data = load_audio_file(ASSETS / "60988__folktelemetry__crash-fast-14.wav")
+    sampler_processor = engine.make_sampler_processor("playback", data)
+
+    desc = sampler_processor.get_parameters_description()
+    transpose_index = get_par_index(desc, "Transpose")
+
+    # A three-note chord played at once: exercises polyphony (multiple keys/voices
+    # sounding simultaneously) through the same transpose engine.
+    sampler_processor.add_midi_note(60, 100, 0.0, 0.5)
+    sampler_processor.add_midi_note(64, 100, 0.0, 0.5)
+    sampler_processor.add_midi_note(67, 100, 0.0, 0.5)
+
+    # Transpose up an octave. Default range is [-48, 48] semitones.
+    sampler_processor.set_parameter(transpose_index, 12.0)
+
+    graph = [(sampler_processor, [])]
+    engine.load_graph(graph)
+
+    render(engine, file_path=OUTPUT / "test_sampler_transpose.wav", duration=DURATION)
+
+    audio = engine.get_audio()
+
+    # Audio was produced and contains no discontinuities (NaN/Inf) from the
+    # per-sample smoothed transpose ramp.
+    assert np.all(np.isfinite(audio))
+    assert np.mean(np.abs(audio)) > 0.01
+
+    # An untransposed render of the identical chord should differ from the
+    # transposed one (the transpose parameter audibly affects playback).
+    engine2 = daw.RenderEngine(SAMPLE_RATE, BUFFER_SIZE)
+    sampler_processor2 = engine2.make_sampler_processor("playback", data)
+    sampler_processor2.add_midi_note(60, 100, 0.0, 0.5)
+    sampler_processor2.add_midi_note(64, 100, 0.0, 0.5)
+    sampler_processor2.add_midi_note(67, 100, 0.0, 0.5)
+    engine2.load_graph([(sampler_processor2, [])])
+    render(engine2, file_path=OUTPUT / "test_sampler_no_transpose.wav", duration=DURATION)
+    audio_untransposed = engine2.get_audio()
+
+    assert not np.allclose(audio, audio_untransposed, atol=1e-6)

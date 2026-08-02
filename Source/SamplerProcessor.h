@@ -1,6 +1,8 @@
 #pragma once
 
 #include <filesystem>
+#include <map>
+#include <vector>
 
 #include "../Source/Sampler/Source/SamplerAudioProcessor.h"
 #include "custom_nanobind_wrappers.h"
@@ -73,6 +75,7 @@ class SamplerProcessor : public ProcessorBase
             myMidiIteratorQN->getNextEvent(myMidiMessageQN, myMidiMessagePositionQN);
 
         myRenderMidiBuffer.clear();
+        myPendingTransposeShifts.clear();
 
         myRecordedMidiSequence.clear();
         myRecordedMidiSequence.addEvent(juce::MidiMessage::midiStart());
@@ -147,10 +150,73 @@ class SamplerProcessor : public ProcessorBase
             }
         }
 
+        applyTranspose();
+
         sampler.processBlock(buffer, myRenderMidiBuffer);
 
         ProcessorBase::processBlock(buffer, midiBuffer);
     }
+
+    // A global, real-time-safe pitch transpose (in semitones) applied on top of every
+    // note. This is "DT style": ultra-low-latency (it's just a note-number shift at
+    // note-on time, so playback still runs through the sampler's normal zero-lookahead
+    // resampling path, with no added buffering/algorithmic latency) and polyphonic
+    // (every simultaneously-held key gets its own independently-tracked shift).
+    //
+    // The current transpose value is captured once, at each note-on, and remembered
+    // until that note's matching note-off, rather than being re-read live. That keeps
+    // a note in tune for its whole duration even if the transpose is automated/swept
+    // while the note is still sounding, and guarantees the note-off always carries the
+    // same note number as its note-on (otherwise the underlying synth wouldn't find a
+    // matching held note, and the note would hang / never turn off).
+    void applyTranspose()
+    {
+        int semitoneShift = juce::roundToInt(
+            juce::jlimit(-kTransposeRangeSemitones, kTransposeRangeSemitones, myTransposeSemitones));
+
+        if (semitoneShift == 0 && myPendingTransposeShifts.empty())
+            return;
+
+        juce::MidiBuffer transposedBuffer;
+
+        juce::MidiBuffer::Iterator it(myRenderMidiBuffer);
+        MidiMessage message;
+        int samplePosition;
+
+        while (it.getNextEvent(message, samplePosition))
+        {
+            if (message.isNoteOn())
+            {
+                auto key = noteKey(message.getChannel(), message.getNoteNumber());
+                myPendingTransposeShifts[key].push_back(semitoneShift);
+
+                int newNote = juce::jlimit(0, 127, message.getNoteNumber() + semitoneShift);
+                message = juce::MidiMessage::noteOn(message.getChannel(), newNote, message.getVelocity());
+            }
+            else if (message.isNoteOff())
+            {
+                int shift = 0;
+                auto key = noteKey(message.getChannel(), message.getNoteNumber());
+                auto found = myPendingTransposeShifts.find(key);
+                if (found != myPendingTransposeShifts.end() && !found->second.empty())
+                {
+                    shift = found->second.front();
+                    found->second.erase(found->second.begin());
+                    if (found->second.empty())
+                        myPendingTransposeShifts.erase(found);
+                }
+
+                int newNote = juce::jlimit(0, 127, message.getNoteNumber() + shift);
+                message = juce::MidiMessage::noteOff(message.getChannel(), newNote, message.getVelocity());
+            }
+
+            transposedBuffer.addEvent(message, samplePosition);
+        }
+
+        myRenderMidiBuffer.swapWith(transposedBuffer);
+    }
+
+    static int noteKey(int channel, int noteNumber) { return (channel << 8) | noteNumber; }
 
     const juce::String getName() const override { return "SamplerProcessor"; }
 
@@ -354,15 +420,19 @@ class SamplerProcessor : public ProcessorBase
 
     std::string wrapperGetParameterName(int parameter)
     {
+        if (parameter == sampler.getNumParameters())
+            return "Transpose";
         return sampler.getParameterName(parameter).toStdString();
     }
 
     std::string wrapperGetParameterAsText(const int parameter)
     {
+        if (parameter == sampler.getNumParameters())
+            return juce::String(myTransposeSemitones, 2).toStdString();
         return sampler.getParameterText(parameter).toStdString();
     }
 
-    int wrapperGetPluginParameterSize() { return sampler.getNumParameters(); }
+    int wrapperGetPluginParameterSize() { return sampler.getNumParameters() + 1; }
 
     nb::list getParametersDescription()
     {
@@ -392,6 +462,23 @@ class SamplerProcessor : public ProcessorBase
             myList.append(myDictionary);
         }
 
+        {
+            // Global transpose, in semitones. Lives in this wrapper (not the underlying
+            // sampler's own parameter tree), since it's implemented as a note-number
+            // shift applied to MIDI events on their way into the sampler.
+            int i = sampler.getNumParameters();
+
+            nb::dict myDictionary;
+            myDictionary["index"] = i;
+            myDictionary["name"] = std::string("Transpose");
+            myDictionary["numSteps"] = 0;
+            myDictionary["isDiscrete"] = false;
+            myDictionary["label"] = std::string("st");
+            myDictionary["text"] = wrapperGetParameterAsText(i);
+
+            myList.append(myDictionary);
+        }
+
         return myList;
     }
 
@@ -406,6 +493,12 @@ class SamplerProcessor : public ProcessorBase
                 parameterName, parameterName, NormalisableRange<float>(0.f, 1.f), 0.f));
         }
 
+        // Extra parameter, appended after all of the underlying sampler's own
+        // parameters, so existing parameter indices are unaffected.
+        group.addChild(std::make_unique<AutomateParameterFloat>(
+            "Transpose", "Transpose",
+            NormalisableRange<float>(-kTransposeRangeSemitones, kTransposeRangeSemitones), 0.f));
+
         this->setParameterTree(std::move(group));
 
         for (int i = 0; i < sampler.getNumParameters(); ++i)
@@ -413,6 +506,7 @@ class SamplerProcessor : public ProcessorBase
             // give it a valid single sample of automation.
             ProcessorBase::setAutomationValByIndex(i, sampler.getParameter(i));
         }
+        ProcessorBase::setAutomationValByIndex(sampler.getNumParameters(), 0.f);
     }
 
     void automateParameters(AudioPlayHead::PositionInfo& posInfo, int numSamples) override
@@ -424,6 +518,10 @@ class SamplerProcessor : public ProcessorBase
             auto theParameter = (AutomateParameterFloat*)allParameters.getUnchecked(i);
             sampler.setParameterRawNotifyingHost(i, theParameter->sample(posInfo));
         }
+
+        auto transposeParameter =
+            (AutomateParameterFloat*)allParameters.getUnchecked(sampler.getNumParameters());
+        myTransposeSemitones = transposeParameter->sample(posInfo);
     }
 
     nb::dict getPickleState()
@@ -435,9 +533,10 @@ class SamplerProcessor : public ProcessorBase
         // Get sample data
         state["sample_data"] = getData();
 
-        // Get all parameter values
+        // Get all parameter values (including the extra Transpose parameter appended
+        // after the sampler's own parameters).
         nb::list params;
-        for (int i = 0; i < sampler.getNumParameters(); i++)
+        for (int i = 0; i < sampler.getNumParameters() + 1; i++)
         {
             params.append(getAutomationAtZeroByIndex(i));
         }
@@ -513,4 +612,11 @@ class SamplerProcessor : public ProcessorBase
     bool myMidiEventsDoRemainSec = false;
 
     MidiMessageSequence myRecordedMidiSequence;
+
+    static constexpr float kTransposeRangeSemitones = 48.f;
+    float myTransposeSemitones = 0.f;
+
+    // key = (midiChannel << 8) | noteNumber -> FIFO of semitone shifts applied to
+    // still-held note-on events, so each note-off can be shifted to match.
+    std::map<int, std::vector<int>> myPendingTransposeShifts;
 };
