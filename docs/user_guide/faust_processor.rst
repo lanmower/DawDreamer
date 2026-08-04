@@ -356,6 +356,40 @@ Tips and Best Practices
    * Use ``<:`` to split signals, ``:>`` to mix them
    * Example: ``process = _ <: _, _;`` duplicates mono to stereo
 
+Compile Flags and Optimization Verification
+--------------------------------------------
+
+``compile_flags`` passes extra arguments straight to the Faust compiler (the same flags you'd pass to the ``faust`` CLI, e.g. ``-vec``, ``-mapp``, ``-fm``). This makes ``FaustProcessor`` a convenient place to verify a compiler flag is bit-exact before shipping it to a real target — compile the same DSP twice, once per flag set, render identical input, and diff.
+
+.. code-block:: python
+
+   import numpy as np
+   import dawdreamer as daw
+
+   SAMPLE_RATE = 44100
+   dsp_code = "process = tan(_ * 0.4);"
+   test_input = np.random.default_rng(0).uniform(-1, 1, SAMPLE_RATE).reshape(1, -1)
+
+   def render(flags):
+       engine = daw.RenderEngine(SAMPLE_RATE, 64)
+       playback = engine.make_playback_processor("in", test_input)
+       faust_processor = engine.make_faust_processor("fx")
+       faust_processor.set_dsp_string(dsp_code)
+       faust_processor.compile_flags = flags
+       faust_processor.compile()
+       engine.load_graph([(playback, []), (faust_processor, ["in"])])
+       engine.render(test_input.shape[1] / SAMPLE_RATE)
+       return engine.get_audio()
+
+   baseline = render([])
+   candidate = render(["-fm", "def"])  # approximate math (sin/cos/tan/exp/log/pow/sqrt)
+   print("max abs diff:", np.abs(baseline - candidate).max())
+
+This is especially useful for embedded/cross-compiled targets, where the machine doing the verification (e.g. your Linux dev box, with DawDreamer's bundled ``libfaust``) may not be the machine that ships the flag (e.g. a musl/aarch64 CI cross-compile) — the numeric behavior of a flag like ``-mapp``/``-fm`` is a property of the generated code, not the target triple, so it can be verified anywhere a real Faust compiler runs.
+
+.. note::
+   ``compile_flags`` is a plain list, not appended incrementally — set it to the full flag list you want for that compile, including any you want to keep from a previous call.
+
 Common Issues
 -------------
 

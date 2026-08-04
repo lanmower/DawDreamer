@@ -21,4 +21,5 @@ dawdreamer.egg-info/*
 dist/*
 
 # vs code configuration
-.vscode/*
+config.bat
+node_modules
