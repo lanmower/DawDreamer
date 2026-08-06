@@ -1,0 +1,1190 @@
+[
+  {
+    "name": "minimal_dub",
+    "seed": "seed-minimal_dub",
+    "dials": {
+      "harmony_gravity": 0.85,
+      "harmony_color": 0.15,
+      "groove_energy": 0.08,
+      "groove_swing": 0.55,
+      "motion_contour": 0.0,
+      "motion_variation": 0.1,
+      "voice_sweep": 0.3,
+      "voice_artic": 0.2
+    },
+    "scale": "aeolian",
+    "progression": [
+      0,
+      3,
+      6,
+      2
+    ],
+    "bars": 8,
+    "metrics": {
+      "n_notes": 17,
+      "chord_tone_pct": 88.2,
+      "syncopation_pct": 52.9,
+      "mean_interval_st": 2.56,
+      "range_st": 15,
+      "accent_pct": 17.6,
+      "ghost_pct": 0.0,
+      "slide_pct": 0.0
+    },
+    "wav": "renders/minimal_dub.wav"
+  },
+  {
+    "name": "dense_acid",
+    "seed": "seed-dense_acid",
+    "dials": {
+      "harmony_gravity": 0.35,
+      "harmony_color": 0.55,
+      "groove_energy": 0.95,
+      "groove_swing": 0.2,
+      "motion_contour": 0.62,
+      "motion_variation": 0.75,
+      "voice_sweep": 0.85,
+      "voice_artic": 0.8
+    },
+    "scale": "melodicMinor",
+    "progression": [
+      0,
+      3,
+      6,
+      2
+    ],
+    "bars": 8,
+    "metrics": {
+      "n_notes": 128,
+      "chord_tone_pct": 33.6,
+      "syncopation_pct": 68.8,
+      "mean_interval_st": 2.7,
+      "range_st": 26,
+      "accent_pct": 39.1,
+      "ghost_pct": 17.2,
+      "slide_pct": 32.8
+    },
+    "wav": "renders/dense_acid.wav"
+  },
+  {
+    "name": "melodic_arch",
+    "seed": "seed-melodic_arch",
+    "dials": {
+      "harmony_gravity": 0.7,
+      "harmony_color": 0.4,
+      "groove_energy": 0.45,
+      "groove_swing": 0.3,
+      "motion_contour": 0.42,
+      "motion_variation": 0.4,
+      "voice_sweep": 0.5,
+      "voice_artic": 0.35
+    },
+    "scale": "minorPentatonic",
+    "progression": [
+      0,
+      5,
+      3,
+      6
+    ],
+    "bars": 8,
+    "metrics": {
+      "n_notes": 92,
+      "chord_tone_pct": 59.8,
+      "syncopation_pct": 68.5,
+      "mean_interval_st": 2.52,
+      "range_st": 19,
+      "accent_pct": 21.7,
+      "ghost_pct": 10.9,
+      "slide_pct": 7.6
+    },
+    "wav": "renders/melodic_arch.wav"
+  },
+  {
+    "name": "sparse_sub_groove",
+    "seed": "seed-sparse_sub_groove",
+    "dials": {
+      "harmony_gravity": 0.9,
+      "harmony_color": 0.05,
+      "groove_energy": 0.2,
+      "groove_swing": 0.65,
+      "motion_contour": 0.0,
+      "motion_variation": 0.05,
+      "voice_sweep": 0.2,
+      "voice_artic": 0.15
+    },
+    "scale": "dorian",
+    "progression": [
+      0,
+      5,
+      3,
+      6
+    ],
+    "bars": 8,
+    "metrics": {
+      "n_notes": 33,
+      "chord_tone_pct": 60.6,
+      "syncopation_pct": 57.6,
+      "mean_interval_st": 1.5,
+      "range_st": 15,
+      "accent_pct": 9.1,
+      "ghost_pct": 6.1,
+      "slide_pct": 0.0
+    },
+    "wav": "renders/sparse_sub_groove.wav"
+  },
+  {
+    "name": "wandering_modal",
+    "seed": "seed-wandering_modal",
+    "dials": {
+      "harmony_gravity": 0.25,
+      "harmony_color": 0.85,
+      "groove_energy": 0.5,
+      "groove_swing": 0.4,
+      "motion_contour": 0.75,
+      "motion_variation": 0.6,
+      "voice_sweep": 0.55,
+      "voice_artic": 0.4
+    },
+    "scale": "harmonicMinor",
+    "progression": [
+      0,
+      5,
+      6,
+      4
+    ],
+    "bars": 8,
+    "metrics": {
+      "n_notes": 91,
+      "chord_tone_pct": 42.9,
+      "syncopation_pct": 65.9,
+      "mean_interval_st": 2.93,
+      "range_st": 26,
+      "accent_pct": 37.4,
+      "ghost_pct": 5.5,
+      "slide_pct": 18.7
+    },
+    "wav": "renders/wandering_modal.wav"
+  },
+  {
+    "name": "high_energy_garage",
+    "seed": "seed-high_energy_garage",
+    "dials": {
+      "harmony_gravity": 0.55,
+      "harmony_color": 0.6,
+      "groove_energy": 0.65,
+      "groove_swing": 0.7,
+      "motion_contour": 0.87,
+      "motion_variation": 0.55,
+      "voice_sweep": 0.6,
+      "voice_artic": 0.65
+    },
+    "scale": "mixolydian",
+    "progression": [
+      0,
+      3,
+      6,
+      2
+    ],
+    "bars": 8,
+    "metrics": {
+      "n_notes": 92,
+      "chord_tone_pct": 35.9,
+      "syncopation_pct": 80.4,
+      "mean_interval_st": 2.59,
+      "range_st": 22,
+      "accent_pct": 29.3,
+      "ghost_pct": 10.9,
+      "slide_pct": 23.9
+    },
+    "wav": "renders/high_energy_garage.wav"
+  },
+  {
+    "name": "slow_swing_deep",
+    "seed": "seed-slow_swing_deep",
+    "dials": {
+      "harmony_gravity": 0.8,
+      "harmony_color": 0.2,
+      "groove_energy": 0.15,
+      "groove_swing": 0.75,
+      "motion_contour": 0.25,
+      "motion_variation": 0.2,
+      "voice_sweep": 0.35,
+      "voice_artic": 0.3
+    },
+    "scale": "aeolian",
+    "progression": [
+      0,
+      3,
+      6,
+      2
+    ],
+    "bars": 8,
+    "metrics": {
+      "n_notes": 41,
+      "chord_tone_pct": 63.4,
+      "syncopation_pct": 68.3,
+      "mean_interval_st": 3.75,
+      "range_st": 22,
+      "accent_pct": 19.5,
+      "ghost_pct": 12.2,
+      "slide_pct": 7.3
+    },
+    "wav": "renders/slow_swing_deep.wav"
+  },
+  {
+    "name": "chaos_max_variation",
+    "seed": "seed-chaos_max_variation",
+    "dials": {
+      "harmony_gravity": 0.2,
+      "harmony_color": 0.95,
+      "groove_energy": 0.8,
+      "groove_swing": 0.9,
+      "motion_contour": 1.0,
+      "motion_variation": 1.0,
+      "voice_sweep": 1.0,
+      "voice_artic": 1.0
+    },
+    "scale": "hungarianMinor",
+    "progression": [
+      0,
+      0,
+      5,
+      6
+    ],
+    "bars": 8,
+    "metrics": {
+      "n_notes": 111,
+      "chord_tone_pct": 44.1,
+      "syncopation_pct": 78.4,
+      "mean_interval_st": 2.89,
+      "range_st": 26,
+      "accent_pct": 43.2,
+      "ghost_pct": 18.9,
+      "slide_pct": 27.0
+    },
+    "wav": "renders/chaos_max_variation.wav"
+  },
+  {
+    "name": "default_boot",
+    "seed": "seed-default_boot",
+    "dials": {
+      "harmony_gravity": 0.66,
+      "harmony_color": 0.32,
+      "groove_energy": 0.5,
+      "groove_swing": 0.36,
+      "motion_contour": 0.5,
+      "motion_variation": 0.36,
+      "voice_sweep": 0.46,
+      "voice_artic": 0.4
+    },
+    "scale": "phrygian",
+    "progression": [
+      0,
+      2,
+      6,
+      3
+    ],
+    "bars": 8,
+    "metrics": {
+      "n_notes": 93,
+      "chord_tone_pct": 46.2,
+      "syncopation_pct": 68.8,
+      "mean_interval_st": 2.52,
+      "range_st": 23,
+      "accent_pct": 34.4,
+      "ghost_pct": 8.6,
+      "slide_pct": 7.5
+    },
+    "wav": "renders/default_boot.wav"
+  },
+  {
+    "name": "all_zero",
+    "seed": "seed-all_zero",
+    "dials": {
+      "harmony_gravity": 0,
+      "harmony_color": 0,
+      "groove_energy": 0,
+      "groove_swing": 0,
+      "motion_contour": 0,
+      "motion_variation": 0,
+      "voice_sweep": 0,
+      "voice_artic": 0
+    },
+    "scale": "dorian",
+    "progression": [
+      0,
+      5,
+      6,
+      4
+    ],
+    "bars": 8,
+    "metrics": {
+      "n_notes": 8,
+      "chord_tone_pct": 25.0,
+      "syncopation_pct": 0.0,
+      "mean_interval_st": 4.71,
+      "range_st": 10,
+      "accent_pct": 37.5,
+      "ghost_pct": 0.0,
+      "slide_pct": 0.0
+    },
+    "wav": "renders/all_zero.wav"
+  },
+  {
+    "name": "all_one",
+    "seed": "seed-all_one",
+    "dials": {
+      "harmony_gravity": 1,
+      "harmony_color": 1,
+      "groove_energy": 1,
+      "groove_swing": 1,
+      "motion_contour": 1,
+      "motion_variation": 1,
+      "voice_sweep": 1,
+      "voice_artic": 1
+    },
+    "scale": "hungarianMinor",
+    "progression": [
+      0,
+      5,
+      6,
+      4
+    ],
+    "bars": 8,
+    "metrics": {
+      "n_notes": 122,
+      "chord_tone_pct": 38.5,
+      "syncopation_pct": 72.1,
+      "mean_interval_st": 2.76,
+      "range_st": 26,
+      "accent_pct": 40.2,
+      "ghost_pct": 23.0,
+      "slide_pct": 40.2
+    },
+    "wav": "renders/all_one.wav"
+  },
+  {
+    "name": "techno_roll_energy",
+    "seed": "seed-techno_roll_energy",
+    "dials": {
+      "harmony_gravity": 0.6,
+      "harmony_color": 0.5,
+      "groove_energy": 1.0,
+      "groove_swing": 0.1,
+      "motion_contour": 0.5,
+      "motion_variation": 0.3,
+      "voice_sweep": 0.7,
+      "voice_artic": 0.5
+    },
+    "scale": "melodicMinor",
+    "progression": [
+      0,
+      5,
+      6,
+      4
+    ],
+    "bars": 8,
+    "metrics": {
+      "n_notes": 128,
+      "chord_tone_pct": 39.8,
+      "syncopation_pct": 68.8,
+      "mean_interval_st": 1.73,
+      "range_st": 23,
+      "accent_pct": 28.9,
+      "ghost_pct": 14.1,
+      "slide_pct": 17.2
+    },
+    "wav": "renders/techno_roll_energy.wav"
+  },
+  {
+    "name": "random_00",
+    "seed": "seed-random_00",
+    "dials": {
+      "harmony_gravity": 0.36536897181816486,
+      "harmony_color": 0.4156494986616913,
+      "groove_energy": 0.025055204344575976,
+      "groove_swing": 0.713400458076944,
+      "motion_contour": 0.9075060106649915,
+      "motion_variation": 0.7729383988583265,
+      "voice_sweep": 0.5857309840869898,
+      "voice_artic": 0.9042742925635098
+    },
+    "scale": "minorPentatonic",
+    "progression": [
+      0,
+      5,
+      3,
+      6
+    ],
+    "bars": 8,
+    "metrics": {
+      "n_notes": 24,
+      "chord_tone_pct": 50.0,
+      "syncopation_pct": 66.7,
+      "mean_interval_st": 3.7,
+      "range_st": 19,
+      "accent_pct": 45.8,
+      "ghost_pct": 8.3,
+      "slide_pct": 12.5
+    },
+    "wav": "renders/random_00.wav"
+  },
+  {
+    "name": "random_01",
+    "seed": "seed-random_01",
+    "dials": {
+      "harmony_gravity": 0.6731011603986137,
+      "harmony_color": 0.8597625182005131,
+      "groove_energy": 0.9046003838847909,
+      "groove_swing": 0.42294714194995486,
+      "motion_contour": 0.5287091785379044,
+      "motion_variation": 0.26629079766672126,
+      "voice_sweep": 0.04346647983606711,
+      "voice_artic": 0.3304398410871944
+    },
+    "scale": "harmonicMinor",
+    "progression": [
+      0,
+      0,
+      5,
+      6
+    ],
+    "bars": 8,
+    "metrics": {
+      "n_notes": 128,
+      "chord_tone_pct": 60.9,
+      "syncopation_pct": 68.8,
+      "mean_interval_st": 1.96,
+      "range_st": 26,
+      "accent_pct": 20.3,
+      "ghost_pct": 14.8,
+      "slide_pct": 7.0
+    },
+    "wav": "renders/random_01.wav"
+  },
+  {
+    "name": "random_02",
+    "seed": "seed-random_02",
+    "dials": {
+      "harmony_gravity": 0.7956133348287011,
+      "harmony_color": 0.37554638995903866,
+      "groove_energy": 0.5364716405187744,
+      "groove_swing": 0.11637505230473144,
+      "motion_contour": 0.7605551502356243,
+      "motion_variation": 0.046932420130466834,
+      "voice_sweep": 0.31540404119338716,
+      "voice_artic": 0.010122424900787519
+    },
+    "scale": "minorPentatonic",
+    "progression": [
+      0,
+      5,
+      3,
+      6
+    ],
+    "bars": 8,
+    "metrics": {
+      "n_notes": 88,
+      "chord_tone_pct": 48.9,
+      "syncopation_pct": 60.2,
+      "mean_interval_st": 2.47,
+      "range_st": 19,
+      "accent_pct": 8.0,
+      "ghost_pct": 3.4,
+      "slide_pct": 0.0
+    },
+    "wav": "renders/random_02.wav"
+  },
+  {
+    "name": "random_03",
+    "seed": "seed-random_03",
+    "dials": {
+      "harmony_gravity": 0.27364190233200736,
+      "harmony_color": 0.7220664786607772,
+      "groove_energy": 0.9898928247763665,
+      "groove_swing": 0.9596966669863305,
+      "motion_contour": 0.041392594165451935,
+      "motion_variation": 0.17093140295003484,
+      "voice_sweep": 0.38446864657610325,
+      "voice_artic": 0.5186831669828625
+    },
+    "scale": "phrygianDom",
+    "progression": [
+      0,
+      3,
+      6,
+      2
+    ],
+    "bars": 8,
+    "metrics": {
+      "n_notes": 125,
+      "chord_tone_pct": 43.2,
+      "syncopation_pct": 70.4,
+      "mean_interval_st": 0.4,
+      "range_st": 13,
+      "accent_pct": 26.4,
+      "ghost_pct": 14.4,
+      "slide_pct": 21.6
+    },
+    "wav": "renders/random_03.wav"
+  },
+  {
+    "name": "random_04",
+    "seed": "seed-random_04",
+    "dials": {
+      "harmony_gravity": 0.6996845318840607,
+      "harmony_color": 0.20656448966256336,
+      "groove_energy": 0.805774063973054,
+      "groove_swing": 0.4450654322613302,
+      "motion_contour": 0.2745757985603512,
+      "motion_variation": 0.8198549384622863,
+      "voice_sweep": 0.17418929454826038,
+      "voice_artic": 0.26174202497554533
+    },
+    "scale": "aeolian",
+    "progression": [
+      0,
+      3,
+      6,
+      2
+    ],
+    "bars": 8,
+    "metrics": {
+      "n_notes": 92,
+      "chord_tone_pct": 55.4,
+      "syncopation_pct": 71.7,
+      "mean_interval_st": 2.69,
+      "range_st": 25,
+      "accent_pct": 19.6,
+      "ghost_pct": 6.5,
+      "slide_pct": 7.6
+    },
+    "wav": "renders/random_04.wav"
+  },
+  {
+    "name": "random_05",
+    "seed": "seed-random_05",
+    "dials": {
+      "harmony_gravity": 0.8276961867410337,
+      "harmony_color": 0.8439155349698966,
+      "groove_energy": 0.8503062538303606,
+      "groove_swing": 0.05357117257071009,
+      "motion_contour": 0.3678757799769403,
+      "motion_variation": 0.7589368570227941,
+      "voice_sweep": 0.4508103503389034,
+      "voice_artic": 0.46439996234165803
+    },
+    "scale": "harmonicMinor",
+    "progression": [
+      0,
+      3,
+      6,
+      2
+    ],
+    "bars": 8,
+    "metrics": {
+      "n_notes": 86,
+      "chord_tone_pct": 43.0,
+      "syncopation_pct": 67.4,
+      "mean_interval_st": 2.67,
+      "range_st": 25,
+      "accent_pct": 33.7,
+      "ghost_pct": 15.1,
+      "slide_pct": 16.3
+    },
+    "wav": "renders/random_05.wav"
+  },
+  {
+    "name": "random_06",
+    "seed": "seed-random_06",
+    "dials": {
+      "harmony_gravity": 0.5025668639034708,
+      "harmony_color": 0.526867093049562,
+      "groove_energy": 0.1639845898949701,
+      "groove_swing": 0.21094933003858762,
+      "motion_contour": 0.29035789675280477,
+      "motion_variation": 0.07747199332613064,
+      "voice_sweep": 0.30796041321947754,
+      "voice_artic": 0.6919727472185669
+    },
+    "scale": "melodicMinor",
+    "progression": [
+      0,
+      6,
+      5,
+      6
+    ],
+    "bars": 8,
+    "metrics": {
+      "n_notes": 15,
+      "chord_tone_pct": 46.7,
+      "syncopation_pct": 20.0,
+      "mean_interval_st": 4.14,
+      "range_st": 16,
+      "accent_pct": 60.0,
+      "ghost_pct": 0.0,
+      "slide_pct": 0.0
+    },
+    "wav": "renders/random_06.wav"
+  },
+  {
+    "name": "random_07",
+    "seed": "seed-random_07",
+    "dials": {
+      "harmony_gravity": 0.8630950990439998,
+      "harmony_color": 0.21186839418330805,
+      "groove_energy": 0.48879352885191796,
+      "groove_swing": 0.0031554503450605953,
+      "motion_contour": 0.47218180104731733,
+      "motion_variation": 0.30052257108101077,
+      "voice_sweep": 0.141728248428575,
+      "voice_artic": 0.8344858380061653
+    },
+    "scale": "aeolian",
+    "progression": [
+      0,
+      2,
+      6,
+      3
+    ],
+    "bars": 8,
+    "metrics": {
+      "n_notes": 83,
+      "chord_tone_pct": 68.7,
+      "syncopation_pct": 60.2,
+      "mean_interval_st": 2.17,
+      "range_st": 19,
+      "accent_pct": 42.2,
+      "ghost_pct": 15.7,
+      "slide_pct": 31.3
+    },
+    "wav": "renders/random_07.wav"
+  },
+  {
+    "name": "random_08",
+    "seed": "seed-random_08",
+    "dials": {
+      "harmony_gravity": 0.677665217289505,
+      "harmony_color": 0.5223811026849217,
+      "groove_energy": 0.3694965384655229,
+      "groove_swing": 0.7251365272949428,
+      "motion_contour": 0.27958206628558435,
+      "motion_variation": 0.0229509152383377,
+      "voice_sweep": 0.6735207383310478,
+      "voice_artic": 0.32385108761875503
+    },
+    "scale": "melodicMinor",
+    "progression": [
+      0,
+      6,
+      5,
+      6
+    ],
+    "bars": 8,
+    "metrics": {
+      "n_notes": 69,
+      "chord_tone_pct": 73.9,
+      "syncopation_pct": 63.8,
+      "mean_interval_st": 2.81,
+      "range_st": 23,
+      "accent_pct": 29.0,
+      "ghost_pct": 11.6,
+      "slide_pct": 11.6
+    },
+    "wav": "renders/random_08.wav"
+  },
+  {
+    "name": "random_09",
+    "seed": "seed-random_09",
+    "dials": {
+      "harmony_gravity": 0.7998686918829528,
+      "harmony_color": 0.2138883595162102,
+      "groove_energy": 0.6471861431477883,
+      "groove_swing": 0.7917704597981126,
+      "motion_contour": 0.3640048121734376,
+      "motion_variation": 0.31943936536770745,
+      "voice_sweep": 0.4449927829117606,
+      "voice_artic": 0.3299103887248688
+    },
+    "scale": "aeolian",
+    "progression": [
+      0,
+      5,
+      6,
+      4
+    ],
+    "bars": 8,
+    "metrics": {
+      "n_notes": 91,
+      "chord_tone_pct": 50.5,
+      "syncopation_pct": 80.2,
+      "mean_interval_st": 2.1,
+      "range_st": 25,
+      "accent_pct": 23.1,
+      "ghost_pct": 22.0,
+      "slide_pct": 8.8
+    },
+    "wav": "renders/random_09.wav"
+  },
+  {
+    "name": "random_10",
+    "seed": "seed-random_10",
+    "dials": {
+      "harmony_gravity": 0.6178743889665119,
+      "harmony_color": 0.11833583528573344,
+      "groove_energy": 0.2923581425224091,
+      "groove_swing": 0.8203115066535644,
+      "motion_contour": 0.4383717858236521,
+      "motion_variation": 0.7738916790193845,
+      "voice_sweep": 0.5806915380116017,
+      "voice_artic": 0.3021069384581323
+    },
+    "scale": "aeolian",
+    "progression": [
+      0,
+      0,
+      5,
+      6
+    ],
+    "bars": 8,
+    "metrics": {
+      "n_notes": 70,
+      "chord_tone_pct": 60.0,
+      "syncopation_pct": 72.9,
+      "mean_interval_st": 3.83,
+      "range_st": 25,
+      "accent_pct": 21.4,
+      "ghost_pct": 8.6,
+      "slide_pct": 7.1
+    },
+    "wav": "renders/random_10.wav"
+  },
+  {
+    "name": "random_11",
+    "seed": "seed-random_11",
+    "dials": {
+      "harmony_gravity": 0.3689617465923787,
+      "harmony_color": 0.6337644301591222,
+      "groove_energy": 0.40961784159459413,
+      "groove_swing": 0.7420698699791717,
+      "motion_contour": 0.5549488207378197,
+      "motion_variation": 0.4113983923166077,
+      "voice_sweep": 0.21875000879780582,
+      "voice_artic": 0.3138262812735587
+    },
+    "scale": "mixolydian",
+    "progression": [
+      0,
+      2,
+      6,
+      3
+    ],
+    "bars": 8,
+    "metrics": {
+      "n_notes": 70,
+      "chord_tone_pct": 40.0,
+      "syncopation_pct": 64.3,
+      "mean_interval_st": 2.8,
+      "range_st": 24,
+      "accent_pct": 24.3,
+      "ghost_pct": 10.0,
+      "slide_pct": 10.0
+    },
+    "wav": "renders/random_11.wav"
+  },
+  {
+    "name": "random_12",
+    "seed": "seed-random_12",
+    "dials": {
+      "harmony_gravity": 0.6701299265762465,
+      "harmony_color": 0.9242611522630977,
+      "groove_energy": 0.8670565098632187,
+      "groove_swing": 0.04906189388947568,
+      "motion_contour": 0.009657849951889452,
+      "motion_variation": 0.8468587552194821,
+      "voice_sweep": 0.7503899085046717,
+      "voice_artic": 0.7799397061662806
+    },
+    "scale": "hungarianMinor",
+    "progression": [
+      0,
+      6,
+      5,
+      6
+    ],
+    "bars": 8,
+    "metrics": {
+      "n_notes": 84,
+      "chord_tone_pct": 39.3,
+      "syncopation_pct": 70.2,
+      "mean_interval_st": 1.81,
+      "range_st": 21,
+      "accent_pct": 40.5,
+      "ghost_pct": 13.1,
+      "slide_pct": 29.8
+    },
+    "wav": "renders/random_12.wav"
+  },
+  {
+    "name": "random_13",
+    "seed": "seed-random_13",
+    "dials": {
+      "harmony_gravity": 0.348666486949365,
+      "harmony_color": 0.2493415518011397,
+      "groove_energy": 0.9532166290998961,
+      "groove_swing": 0.7582782645751637,
+      "motion_contour": 0.5294009590996805,
+      "motion_variation": 0.9318450621031447,
+      "voice_sweep": 0.9659114358641063,
+      "voice_artic": 0.6365569821801457
+    },
+    "scale": "phrygian",
+    "progression": [
+      0,
+      5,
+      3,
+      6
+    ],
+    "bars": 8,
+    "metrics": {
+      "n_notes": 128,
+      "chord_tone_pct": 36.7,
+      "syncopation_pct": 68.8,
+      "mean_interval_st": 2.79,
+      "range_st": 25,
+      "accent_pct": 30.5,
+      "ghost_pct": 10.2,
+      "slide_pct": 22.7
+    },
+    "wav": "renders/random_13.wav"
+  },
+  {
+    "name": "random_14",
+    "seed": "seed-random_14",
+    "dials": {
+      "harmony_gravity": 0.6438895093133374,
+      "harmony_color": 0.9628248041334283,
+      "groove_energy": 0.8498558707152113,
+      "groove_swing": 0.03440961427811917,
+      "motion_contour": 0.47365424655868105,
+      "motion_variation": 0.0372889339290019,
+      "voice_sweep": 0.17186256157483315,
+      "voice_artic": 0.8809738709345193
+    },
+    "scale": "hungarianMinor",
+    "progression": [
+      0,
+      5,
+      3,
+      6
+    ],
+    "bars": 8,
+    "metrics": {
+      "n_notes": 84,
+      "chord_tone_pct": 51.2,
+      "syncopation_pct": 70.2,
+      "mean_interval_st": 2.28,
+      "range_st": 23,
+      "accent_pct": 41.7,
+      "ghost_pct": 20.2,
+      "slide_pct": 22.6
+    },
+    "wav": "renders/random_14.wav"
+  },
+  {
+    "name": "random_15",
+    "seed": "seed-random_15",
+    "dials": {
+      "harmony_gravity": 0.9966834694786598,
+      "harmony_color": 0.9681945152435769,
+      "groove_energy": 0.6648905012956553,
+      "groove_swing": 0.31267630118697876,
+      "motion_contour": 0.27031425661490005,
+      "motion_variation": 0.14963033621326405,
+      "voice_sweep": 0.8062024688672786,
+      "voice_artic": 0.49814005844780895
+    },
+    "scale": "hungarianMinor",
+    "progression": [
+      0,
+      0,
+      5,
+      6
+    ],
+    "bars": 8,
+    "metrics": {
+      "n_notes": 68,
+      "chord_tone_pct": 64.7,
+      "syncopation_pct": 75.0,
+      "mean_interval_st": 2.46,
+      "range_st": 23,
+      "accent_pct": 27.9,
+      "ghost_pct": 13.2,
+      "slide_pct": 17.6
+    },
+    "wav": "renders/random_15.wav"
+  },
+  {
+    "name": "random_16",
+    "seed": "seed-random_16",
+    "dials": {
+      "harmony_gravity": 0.5777896878381709,
+      "harmony_color": 0.9013378017827887,
+      "groove_energy": 0.2862533777478389,
+      "groove_swing": 0.8248849521762662,
+      "motion_contour": 0.8096347366771861,
+      "motion_variation": 0.30021841599045385,
+      "voice_sweep": 0.15296570962521994,
+      "voice_artic": 0.20693899840475904
+    },
+    "scale": "hungarianMinor",
+    "progression": [
+      0,
+      3,
+      6,
+      2
+    ],
+    "bars": 8,
+    "metrics": {
+      "n_notes": 62,
+      "chord_tone_pct": 22.6,
+      "syncopation_pct": 67.7,
+      "mean_interval_st": 1.87,
+      "range_st": 13,
+      "accent_pct": 17.7,
+      "ghost_pct": 4.8,
+      "slide_pct": 3.2
+    },
+    "wav": "renders/random_16.wav"
+  },
+  {
+    "name": "random_17",
+    "seed": "seed-random_17",
+    "dials": {
+      "harmony_gravity": 0.73954734207028,
+      "harmony_color": 0.8285863852962191,
+      "groove_energy": 0.5570103323320006,
+      "groove_swing": 0.2547785351702707,
+      "motion_contour": 0.9419324455807696,
+      "motion_variation": 0.5717293602106234,
+      "voice_sweep": 0.0232626694261725,
+      "voice_artic": 0.21735500506912675
+    },
+    "scale": "harmonicMinor",
+    "progression": [
+      0,
+      2,
+      6,
+      3
+    ],
+    "bars": 8,
+    "metrics": {
+      "n_notes": 62,
+      "chord_tone_pct": 33.9,
+      "syncopation_pct": 74.2,
+      "mean_interval_st": 3.18,
+      "range_st": 23,
+      "accent_pct": 19.4,
+      "ghost_pct": 3.2,
+      "slide_pct": 11.3
+    },
+    "wav": "renders/random_17.wav"
+  },
+  {
+    "name": "random_18",
+    "seed": "seed-random_18",
+    "dials": {
+      "harmony_gravity": 0.7001458278147429,
+      "harmony_color": 0.4392756922992833,
+      "groove_energy": 0.7253603648117488,
+      "groove_swing": 0.005107660108353285,
+      "motion_contour": 0.46299128018850777,
+      "motion_variation": 0.4105605076382003,
+      "voice_sweep": 0.8060168500798813,
+      "voice_artic": 0.8877455168411812
+    },
+    "scale": "minorPentatonic",
+    "progression": [
+      0,
+      6,
+      5,
+      6
+    ],
+    "bars": 8,
+    "metrics": {
+      "n_notes": 43,
+      "chord_tone_pct": 62.8,
+      "syncopation_pct": 58.1,
+      "mean_interval_st": 3.33,
+      "range_st": 17,
+      "accent_pct": 39.5,
+      "ghost_pct": 14.0,
+      "slide_pct": 25.6
+    },
+    "wav": "renders/random_18.wav"
+  },
+  {
+    "name": "random_19",
+    "seed": "seed-random_19",
+    "dials": {
+      "harmony_gravity": 0.2139976403142767,
+      "harmony_color": 0.3508480782495803,
+      "groove_energy": 0.38772220036857474,
+      "groove_swing": 0.8237054189967161,
+      "motion_contour": 0.34969717628919306,
+      "motion_variation": 0.015024529379832563,
+      "voice_sweep": 0.22649425507030618,
+      "voice_artic": 0.07657046071181861
+    },
+    "scale": "minorPentatonic",
+    "progression": [
+      0,
+      0,
+      5,
+      6
+    ],
+    "bars": 8,
+    "metrics": {
+      "n_notes": 69,
+      "chord_tone_pct": 75.4,
+      "syncopation_pct": 63.8,
+      "mean_interval_st": 2.72,
+      "range_st": 17,
+      "accent_pct": 18.8,
+      "ghost_pct": 4.3,
+      "slide_pct": 4.3
+    },
+    "wav": "renders/random_19.wav"
+  },
+  {
+    "name": "random_20",
+    "seed": "seed-random_20",
+    "dials": {
+      "harmony_gravity": 0.755050218890895,
+      "harmony_color": 0.5453873304089796,
+      "groove_energy": 0.4916779493209271,
+      "groove_swing": 0.913353021345782,
+      "motion_contour": 0.17074877669390098,
+      "motion_variation": 0.8877730747856093,
+      "voice_sweep": 0.7311363325310021,
+      "voice_artic": 0.7455407674657959
+    },
+    "scale": "melodicMinor",
+    "progression": [
+      0,
+      5,
+      6,
+      4
+    ],
+    "bars": 8,
+    "metrics": {
+      "n_notes": 116,
+      "chord_tone_pct": 34.5,
+      "syncopation_pct": 75.9,
+      "mean_interval_st": 2.8,
+      "range_st": 26,
+      "accent_pct": 32.8,
+      "ghost_pct": 12.1,
+      "slide_pct": 25.0
+    },
+    "wav": "renders/random_20.wav"
+  },
+  {
+    "name": "random_21",
+    "seed": "seed-random_21",
+    "dials": {
+      "harmony_gravity": 0.49324634558305913,
+      "harmony_color": 0.6757275897701494,
+      "groove_energy": 0.2221096249157376,
+      "groove_swing": 0.2742231277925826,
+      "motion_contour": 0.3753591245245297,
+      "motion_variation": 0.560801352414401,
+      "voice_sweep": 0.9794524488153706,
+      "voice_artic": 0.24873229987007495
+    },
+    "scale": "phrygianDom",
+    "progression": [
+      0,
+      3,
+      6,
+      2
+    ],
+    "bars": 8,
+    "metrics": {
+      "n_notes": 20,
+      "chord_tone_pct": 50.0,
+      "syncopation_pct": 35.0,
+      "mean_interval_st": 3.47,
+      "range_st": 22,
+      "accent_pct": 15.0,
+      "ghost_pct": 5.0,
+      "slide_pct": 0.0
+    },
+    "wav": "renders/random_21.wav"
+  },
+  {
+    "name": "random_22",
+    "seed": "seed-random_22",
+    "dials": {
+      "harmony_gravity": 0.6043666390984465,
+      "harmony_color": 0.8881799038763907,
+      "groove_energy": 0.5606198192379619,
+      "groove_swing": 0.6147150862467794,
+      "motion_contour": 0.32923778513985846,
+      "motion_variation": 0.7839013758140543,
+      "voice_sweep": 0.46732929608365625,
+      "voice_artic": 0.6584545277432265
+    },
+    "scale": "harmonicMinor",
+    "progression": [
+      0,
+      5,
+      6,
+      4
+    ],
+    "bars": 8,
+    "metrics": {
+      "n_notes": 83,
+      "chord_tone_pct": 43.4,
+      "syncopation_pct": 72.3,
+      "mean_interval_st": 3.44,
+      "range_st": 26,
+      "accent_pct": 39.8,
+      "ghost_pct": 16.9,
+      "slide_pct": 22.9
+    },
+    "wav": "renders/random_22.wav"
+  },
+  {
+    "name": "random_23",
+    "seed": "seed-random_23",
+    "dials": {
+      "harmony_gravity": 0.8285069737624688,
+      "harmony_color": 0.9908886096535119,
+      "groove_energy": 0.22145292397756966,
+      "groove_swing": 0.28279078487558496,
+      "motion_contour": 0.060019757026727905,
+      "motion_variation": 0.40612034697773414,
+      "voice_sweep": 0.6699551677390508,
+      "voice_artic": 0.14896049050330418
+    },
+    "scale": "hungarianMinor",
+    "progression": [
+      0,
+      6,
+      5,
+      6
+    ],
+    "bars": 8,
+    "metrics": {
+      "n_notes": 19,
+      "chord_tone_pct": 47.4,
+      "syncopation_pct": 15.8,
+      "mean_interval_st": 3.22,
+      "range_st": 17,
+      "accent_pct": 21.1,
+      "ghost_pct": 5.3,
+      "slide_pct": 0.0
+    },
+    "wav": "renders/random_23.wav"
+  }
+]

@@ -1,0 +1,4 @@
+# Full render sweep is regenerable via `python3 run_experiments.py` and is
+# too large to track in git (~100MB for 36 renders). A curated subset of
+# representative renders is committed under ../samples/ instead.
+*.wav
