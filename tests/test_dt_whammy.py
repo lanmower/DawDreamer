@@ -12,7 +12,9 @@ def _param_address(faust_processor, suffix):
     hardcoding a path.
     """
     matches = [
-        p["name"] for p in faust_processor.get_parameters_description() if p["name"].endswith(suffix)
+        p["name"]
+        for p in faust_processor.get_parameters_description()
+        if p["name"].endswith(suffix)
     ]
     assert matches, f"no Faust parameter ending with {suffix!r} was found"
     return matches
@@ -30,9 +32,7 @@ def _set_all_automation(faust_processor, suffix, data):
 
 def _make_source(engine, duration):
     """A real-world audio signal to run through the whammy: a funk drum loop."""
-    data = load_audio_file(
-        ASSETS / "575854__yellowtree__d-b-funk-loop.wav", duration=duration
-    )
+    data = load_audio_file(ASSETS / "575854__yellowtree__d-b-funk-loop.wav", duration=duration)
     return engine.make_playback_processor("source", data)
 
 

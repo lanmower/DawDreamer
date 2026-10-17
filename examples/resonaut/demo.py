@@ -14,11 +14,11 @@ Produces .wav files in ./output demonstrating:
 
 from pathlib import Path
 
-import dawdreamer as daw
 import numpy as np
+from resonaut import Material, ObjectConfig, Resonaut
 from scipy.io import wavfile
 
-from resonaut import Material, ObjectConfig, Resonaut
+import dawdreamer as daw
 
 SAMPLE_RATE = 44100
 BLOCK_SIZE = 512

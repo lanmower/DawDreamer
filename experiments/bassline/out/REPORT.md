@@ -54,4 +54,3 @@ voice_sweep          = 0.46
 voice_artic          = 0.4
 ```
 These are the values `BassEngine` boots with before any pot movement -- chosen to be immediately playable and recognisably 'bassline-like' (the `default_boot` row above: high chord-tone%, moderate syncopation, wave contour) rather than sitting at the 0.5/0.5/... midpoint, which the `all_zero`/`all_one` corner renders show is either too static or too chaotic to be a good first impression.
-

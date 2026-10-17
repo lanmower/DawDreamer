@@ -16,10 +16,12 @@ Dial groups (bank, dial0, dial1):
   MOTION  : contour   (pitch shape select)   , variation (leap/randomness/repeat)
   VOICE   : sweep     (filter automation)    , artic     (accent/ghost/slide energy)
 """
+
 from __future__ import annotations
+
 import math
-from dataclasses import dataclass, field
-from typing import List, Tuple
+from dataclasses import dataclass
+
 
 # ------------------------------------------------------------------
 # 1. Seeded RNG (mulberry32 port -- deterministic, matches SUBSTRATE's
@@ -67,14 +69,14 @@ def hash_seed(s: str) -> int:
 #    needs zero changes here).
 # ------------------------------------------------------------------
 SCALES = [
-    ("dorian",         [0, 2, 3, 5, 7, 9, 10]),
-    ("aeolian",        [0, 2, 3, 5, 7, 8, 10]),
-    ("phrygian",       [0, 1, 3, 5, 7, 8, 10]),
-    ("minorPentatonic",[0, 3, 5, 7, 10, 3, 5]),
-    ("melodicMinor",   [0, 2, 3, 5, 7, 9, 11]),
-    ("mixolydian",     [0, 2, 4, 5, 7, 9, 10]),
-    ("phrygianDom",    [0, 1, 4, 5, 7, 8, 10]),
-    ("harmonicMinor",  [0, 2, 3, 5, 7, 8, 11]),
+    ("dorian", [0, 2, 3, 5, 7, 9, 10]),
+    ("aeolian", [0, 2, 3, 5, 7, 8, 10]),
+    ("phrygian", [0, 1, 3, 5, 7, 8, 10]),
+    ("minorPentatonic", [0, 3, 5, 7, 10, 3, 5]),
+    ("melodicMinor", [0, 2, 3, 5, 7, 9, 11]),
+    ("mixolydian", [0, 2, 4, 5, 7, 9, 10]),
+    ("phrygianDom", [0, 1, 4, 5, 7, 8, 10]),
+    ("harmonicMinor", [0, 2, 3, 5, 7, 8, 11]),
     ("hungarianMinor", [0, 2, 3, 6, 7, 8, 11]),
 ]
 
@@ -84,7 +86,7 @@ def sc(scale_idx: int, degree: int) -> int:
     return degs[degree % len(degs)]
 
 
-def chord_tones(scale_idx: int) -> List[int]:
+def chord_tones(scale_idx: int) -> list[int]:
     """Root/3rd/5th/7th built by stacking scale-degree thirds, like SUBSTRATE buildChords()."""
     return [0, sc(scale_idx, 2), sc(scale_idx, 4), sc(scale_idx, 6)]
 
@@ -92,12 +94,12 @@ def chord_tones(scale_idx: int) -> List[int]:
 # Generic chord progressions (scale-degree roots), genre-agnostic --
 # replaces the old per-genre GCFG.progs table in bass_engine.cpp.
 PROGRESSIONS = [
-    [0, 5, 3, 6],   # i - VI - iv - VII
-    [0, 6, 5, 6],   # i - VII - VI - VII
-    [0, 3, 6, 2],   # i - iv - VII - III
-    [0, 5, 6, 4],   # i - VI - VII - V (dark cadence)
-    [0, 2, 6, 3],   # i - III - VII - iv
-    [0, 0, 5, 6],   # pedal-leaning: i - i - VI - VII
+    [0, 5, 3, 6],  # i - VI - iv - VII
+    [0, 6, 5, 6],  # i - VII - VI - VII
+    [0, 3, 6, 2],  # i - iv - VII - III
+    [0, 5, 6, 4],  # i - VI - VII - V (dark cadence)
+    [0, 2, 6, 3],  # i - III - VII - iv
+    [0, 0, 5, 6],  # pedal-leaning: i - i - VI - VII
 ]
 
 
@@ -107,20 +109,35 @@ PROGRESSIONS = [
 #    well on a *bass* voice (dropped the busiest DnB/footwork templates
 #    that only make sense with a drum bed underneath).
 # ------------------------------------------------------------------
-GROOVES: List[Tuple[str, List[float]]] = [
-    ("minimal",     [1, 0, 0, 0,  0, 0, .3, 0,  .5, 0, 0, 0,  0, 0, .3, 0]),
-    ("deep",        [1, 0, 0, 0,  0, 0, .36, 0, .6, 0, 0, 0,  0, 0, .3, 0]),
-    ("house_bump",  [.92, 0, .78, .06, .22, 0, .78, .06, .58, 0, .78, .06, .22, 0, .78, .16]),
-    ("four_floor",  [1, 0, .1, .16, .9, 0, .1, .16, .95, 0, .1, .16, .9, 0, .16, .32]),
-    ("acid_303",    [1, .36, .7, .4, .6, .46, .76, .36, .86, .4, .7, .46, .6, .4, .8, .56]),
-    ("garage_2step",[1, 0, .16, .56, .1, .2, .8, .16, .36, 0, .7, .2, .16, .56, .36, .5]),
-    ("dembow",      [1, 0, 0, .86, 0, 0, .9, 0, .36, 0, 0, .86, 0, 0, .76, .2]),
-    ("funk_synco",  [1, 0, .36, .7, .2, .46, .16, .6, .56, .2, .5, .36, .3, .6, .4, .56]),
-    ("techno_roll", [1, .6, .66, .6, .8, .6, .66, .6, .9, .6, .66, .6, .8, .6, .7, .66]),
+GROOVES: list[tuple[str, list[float]]] = [
+    ("minimal", [1, 0, 0, 0, 0, 0, 0.3, 0, 0.5, 0, 0, 0, 0, 0, 0.3, 0]),
+    ("deep", [1, 0, 0, 0, 0, 0, 0.36, 0, 0.6, 0, 0, 0, 0, 0, 0.3, 0]),
+    (
+        "house_bump",
+        [0.92, 0, 0.78, 0.06, 0.22, 0, 0.78, 0.06, 0.58, 0, 0.78, 0.06, 0.22, 0, 0.78, 0.16],
+    ),
+    ("four_floor", [1, 0, 0.1, 0.16, 0.9, 0, 0.1, 0.16, 0.95, 0, 0.1, 0.16, 0.9, 0, 0.16, 0.32]),
+    (
+        "acid_303",
+        [1, 0.36, 0.7, 0.4, 0.6, 0.46, 0.76, 0.36, 0.86, 0.4, 0.7, 0.46, 0.6, 0.4, 0.8, 0.56],
+    ),
+    (
+        "garage_2step",
+        [1, 0, 0.16, 0.56, 0.1, 0.2, 0.8, 0.16, 0.36, 0, 0.7, 0.2, 0.16, 0.56, 0.36, 0.5],
+    ),
+    ("dembow", [1, 0, 0, 0.86, 0, 0, 0.9, 0, 0.36, 0, 0, 0.86, 0, 0, 0.76, 0.2]),
+    (
+        "funk_synco",
+        [1, 0, 0.36, 0.7, 0.2, 0.46, 0.16, 0.6, 0.56, 0.2, 0.5, 0.36, 0.3, 0.6, 0.4, 0.56],
+    ),
+    (
+        "techno_roll",
+        [1, 0.6, 0.66, 0.6, 0.8, 0.6, 0.66, 0.6, 0.9, 0.6, 0.66, 0.6, 0.8, 0.6, 0.7, 0.66],
+    ),
 ]
 
 # 4/4 metric weight of each 16th (kick/backbeat-adjacent slots are "strong").
-METRIC = [1, .12, .34, .16, .78, .12, .36, .16, .9, .12, .34, .16, .72, .14, .4, .28]
+METRIC = [1, 0.12, 0.34, 0.16, 0.78, 0.12, 0.36, 0.16, 0.9, 0.12, 0.34, 0.16, 0.72, 0.14, 0.4, 0.28]
 
 
 # ------------------------------------------------------------------
@@ -128,19 +145,47 @@ METRIC = [1, .12, .34, .16, .78, .12, .36, .16, .9, .12, .34, .16, .72, .14, .4,
 #    SUBSTRATE's CURVES chosen to be cheap to evaluate on an ESP32
 #    (no per-sample cost -- evaluated once per 16-step motif).
 # ------------------------------------------------------------------
-def _level(x): return 0.5
-def _climb(x): return x
-def _descend(x): return 1 - x
-def _arch(x): return math.sin(math.pi * x)
-def _valley(x): return 1 - math.sin(math.pi * x)
-def _wave(x): return (1 - math.cos(2 * math.pi * x)) / 2
-def _zigzag(x): return 1 - abs(((x * 2) % 2) - 1)
-def _terraced(x): return math.floor(x * 4) / 3
+def _level(x):
+    return 0.5
+
+
+def _climb(x):
+    return x
+
+
+def _descend(x):
+    return 1 - x
+
+
+def _arch(x):
+    return math.sin(math.pi * x)
+
+
+def _valley(x):
+    return 1 - math.sin(math.pi * x)
+
+
+def _wave(x):
+    return (1 - math.cos(2 * math.pi * x)) / 2
+
+
+def _zigzag(x):
+    return 1 - abs(((x * 2) % 2) - 1)
+
+
+def _terraced(x):
+    return math.floor(x * 4) / 3
+
 
 CONTOURS = [
-    ("level", _level), ("climb", _climb), ("descend", _descend),
-    ("arch", _arch), ("valley", _valley), ("wave", _wave),
-    ("zigzag", _zigzag), ("terraced", _terraced),
+    ("level", _level),
+    ("climb", _climb),
+    ("descend", _descend),
+    ("arch", _arch),
+    ("valley", _valley),
+    ("wave", _wave),
+    ("zigzag", _zigzag),
+    ("terraced", _terraced),
 ]
 
 
@@ -161,11 +206,11 @@ class Dials:
 
 @dataclass
 class Note:
-    step: int          # 0..15
-    note: int           # MIDI, relative to nothing -- absolute already
+    step: int  # 0..15
+    note: int  # MIDI, relative to nothing -- absolute already
     vel: int
-    dur: float           # in steps
-    fcc: int             # 0-127 filter CC value
+    dur: float  # in steps
+    fcc: int  # 0-127 filter CC value
     accent: bool = False
     ghost: bool = False
     slide: bool = False
@@ -176,7 +221,7 @@ class Note:
 # 6. Rhythm: blend a groove template toward density/syncopation driven
 #    by groove_energy + groove_swing, exactly like SUBSTRATE buildRhythm.
 # ------------------------------------------------------------------
-def build_onsets(dials: Dials, rng: Mulberry32) -> List[int]:
+def build_onsets(dials: Dials, rng: Mulberry32) -> list[int]:
     energy = dials.groove_energy
     sync = dials.groove_swing  # swing dial also pushes syncopation, folded together
 
@@ -203,13 +248,19 @@ def build_onsets(dials: Dials, rng: Mulberry32) -> List[int]:
 # 7. Pitch: constrained DP (Viterbi) over a small candidate pool,
 #    identical structure to SUBSTRATE's buildPitches / Liu's eq.28.
 # ------------------------------------------------------------------
-def build_pitches(onsets: List[int], root: int, scale_idx: int, dials: Dials,
-                   rng: Mulberry32, register_span: int = 15) -> List[int]:
+def build_pitches(
+    onsets: list[int],
+    root: int,
+    scale_idx: int,
+    dials: Dials,
+    rng: Mulberry32,
+    register_span: int = 15,
+) -> list[int]:
     gravity = dials.harmony_gravity
     tension = 1 - dials.harmony_color  # color dial also loosens chord-tone strictness
     depth = 0.4 + dials.motion_variation * 0.3
     variation_temp = dials.motion_variation * 0.85
-    leap = 3 + int(dials.motion_variation * 9)   # comfortable leap, semitones
+    leap = 3 + int(dials.motion_variation * 9)  # comfortable leap, semitones
     oct_appetite = dials.motion_variation * 0.5
     repeat = 1 - dials.motion_variation * 0.6
 
@@ -219,8 +270,9 @@ def build_pitches(onsets: List[int], root: int, scale_idx: int, dials: Dials,
     lo, hi = root, root + register_span
     pool = list(range(lo, hi + 1))
 
-    contour_name, contour_fn = CONTOURS[min(len(CONTOURS) - 1,
-                                              int(dials.motion_contour * len(CONTOURS)))]
+    contour_name, contour_fn = CONTOURS[
+        min(len(CONTOURS) - 1, int(dials.motion_contour * len(CONTOURS)))
+    ]
     n = len(onsets)
     targets = [lo + contour_fn(t / max(1, n - 1)) * register_span for t in range(n)]
 
@@ -289,19 +341,21 @@ def build_pitches(onsets: List[int], root: int, scale_idx: int, dials: Dials,
 # ------------------------------------------------------------------
 # 8. Articulation: swing offset, accent/ghost/slide, filter-CC sweep.
 # ------------------------------------------------------------------
-def build_notes(onsets: List[int], pitches: List[int], dials: Dials,
-                 rng: Mulberry32, root: int) -> List[Note]:
+def build_notes(
+    onsets: list[int], pitches: list[int], dials: Dials, rng: Mulberry32, root: int
+) -> list[Note]:
     artic = dials.voice_artic
     sweep_depth = dials.voice_sweep
-    contour_name, contour_fn = CONTOURS[min(len(CONTOURS) - 1,
-                                              int(dials.motion_contour * len(CONTOURS)))]
+    contour_name, contour_fn = CONTOURS[
+        min(len(CONTOURS) - 1, int(dials.motion_contour * len(CONTOURS)))
+    ]
 
     accent_p = 0.15 + artic * 0.45
     ghost_p = 0.05 + artic * 0.35
     slide_p = artic * 0.4
     gate = 0.45 + (1 - artic) * 0.35
 
-    notes: List[Note] = []
+    notes: list[Note] = []
     for i, s in enumerate(onsets):
         m = METRIC[s % 16]
         next_s = onsets[i + 1] if i + 1 < len(onsets) else 16
@@ -310,12 +364,26 @@ def build_notes(onsets: List[int], pitches: List[int], dials: Dials,
         accent = rng.rc(accent_p * (0.3 + 1.1 * m))
         ghost = (not accent) and rng.rc(ghost_p * (1.15 - m))
         slide = (gap <= 3) and (i + 1 < len(onsets)) and rng.rc(slide_p)
-        vel = int(min(127, max(20, (0.55 + m * 0.3) * 100 + (25 if accent else 0) - (45 if ghost else 0))))
+        vel = int(
+            min(127, max(20, (0.55 + m * 0.3) * 100 + (25 if accent else 0) - (45 if ghost else 0)))
+        )
         x = s / 16.0
         curve_val = contour_fn(x)
-        fcc = int(min(127, max(10, 40 + curve_val * 60 * (0.4 + sweep_depth) + (25 if accent else 0))))
-        notes.append(Note(step=s, note=pitches[i], vel=vel, dur=dur, fcc=fcc,
-                           accent=accent, ghost=ghost, slide=slide))
+        fcc = int(
+            min(127, max(10, 40 + curve_val * 60 * (0.4 + sweep_depth) + (25 if accent else 0)))
+        )
+        notes.append(
+            Note(
+                step=s,
+                note=pitches[i],
+                vel=vel,
+                dur=dur,
+                fcc=fcc,
+                accent=accent,
+                ghost=ghost,
+                slide=slide,
+            )
+        )
     return notes
 
 
@@ -323,7 +391,7 @@ def build_notes(onsets: List[int], pitches: List[int], dials: Dials,
 # 9. Top-level: generate one bar (16 steps) -- this is exactly the
 #    function signature the C++ port (genInterpreted) mirrors.
 # ------------------------------------------------------------------
-def generate_bar(root: int, scale_idx: int, dials: Dials, rng: Mulberry32) -> List[Note]:
+def generate_bar(root: int, scale_idx: int, dials: Dials, rng: Mulberry32) -> list[Note]:
     onsets = build_onsets(dials, rng)
     pitches = build_pitches(onsets, root, scale_idx, dials, rng)
     return build_notes(onsets, pitches, dials, rng, root)
@@ -333,21 +401,32 @@ def pick_scale_idx(dials: Dials) -> int:
     return min(len(SCALES) - 1, int(dials.harmony_color * len(SCALES)))
 
 
-def generate_phrase(root: int, dials: Dials, seed: str, bars: int = 8) -> Tuple[List[Note], List[int], int]:
+def generate_phrase(
+    root: int, dials: Dials, seed: str, bars: int = 8
+) -> tuple[list[Note], list[int], int]:
     """Multi-bar loop: rotates a chord progression over `bars` bars, one
     Note list of absolute-step positions (step = bar*16 + local_step)."""
     rng = Mulberry32(hash_seed(seed))
     scale_idx = pick_scale_idx(dials)
     prog = PROGRESSIONS[rng.ri(len(PROGRESSIONS))]
-    phrase: List[Note] = []
+    phrase: list[Note] = []
     for bar in range(bars):
         degree = prog[bar % len(prog)]
         bar_root = root + sc(scale_idx, degree)
         bar_notes = generate_bar(bar_root, scale_idx, dials, rng)
         for note in bar_notes:
-            phrase.append(Note(step=bar * 16 + note.step, note=note.note, vel=note.vel,
-                                dur=note.dur, fcc=note.fcc, accent=note.accent,
-                                ghost=note.ghost, slide=note.slide))
+            phrase.append(
+                Note(
+                    step=bar * 16 + note.step,
+                    note=note.note,
+                    vel=note.vel,
+                    dur=note.dur,
+                    fcc=note.fcc,
+                    accent=note.accent,
+                    ghost=note.ghost,
+                    slide=note.slide,
+                )
+            )
     return phrase, prog, scale_idx
 
 
@@ -355,11 +434,11 @@ def generate_phrase(root: int, dials: Dials, seed: str, bars: int = 8) -> Tuple[
 # 10. Metrics -- same shape as SUBSTRATE's #metrics panel, used to
 #     score experiment renders automatically.
 # ------------------------------------------------------------------
-def compute_metrics(phrase: List[Note], root: int, scale_idx: int) -> dict:
+def compute_metrics(phrase: list[Note], root: int, scale_idx: int) -> dict:
     if not phrase:
         return {}
     n = len(phrase)
-    ctones = set(x % 12 for x in chord_tones(scale_idx))
+    ctones = {x % 12 for x in chord_tones(scale_idx)}
     chord_tone_hits = sum(1 for note in phrase if (note.note - root) % 12 in ctones)
     weak = sum(1 for note in phrase if METRIC[note.step % 16] < 0.4)
     intervals = [abs(phrase[i].note - phrase[i - 1].note) for i in range(1, n)]

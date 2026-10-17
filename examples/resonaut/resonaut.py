@@ -292,7 +292,9 @@ class Resonaut:
         self.name = name
         self.num_voices = num_voices
         self.group_voices = group_voices
-        self.materials = dict(materials or {1: Material.STRING, 2: Material.BAR, 3: Material.MEMBRANE})
+        self.materials = dict(
+            materials or {1: Material.STRING, 2: Material.BAR, 3: Material.MEMBRANE}
+        )
         self.defaults = dict(defaults or {})
 
         self.processor = engine.make_faust_processor(name)

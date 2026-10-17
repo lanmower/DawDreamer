@@ -6,8 +6,8 @@ ported into esp-idf-link's embedded C++.  Produces:
   out/experiments.json    -- full parameter + metrics log
   out/REPORT.md            -- human-readable findings + recommended defaults
 """
+
 import json
-import math
 import os
 import random
 import sys
@@ -16,10 +16,14 @@ import numpy as np
 import soundfile as sf
 
 sys.path.insert(0, os.path.dirname(__file__))
-import dawdreamer as daw
 from substrate_interpreter import (
-    Dials, SCALES, generate_phrase, compute_metrics, pick_scale_idx,
+    SCALES,
+    Dials,
+    compute_metrics,
+    generate_phrase,
 )
+
+import dawdreamer as daw
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DSP_PATH = os.path.join(HERE, "substrate_bass.dsp")
@@ -54,8 +58,9 @@ def build_cutoff_automation(phrase, bars: int) -> np.ndarray:
     return arr
 
 
-def render_phrase(name: str, dials: Dials, seed: str, bars: int = 8,
-                   voice_cutoff_base=None, drive=0.16) -> dict:
+def render_phrase(
+    name: str, dials: Dials, seed: str, bars: int = 8, voice_cutoff_base=None, drive=0.16
+) -> dict:
     phrase, prog, scale_idx = generate_phrase(ROOT, dials, seed, bars=bars)
     metrics = compute_metrics(phrase, ROOT, scale_idx)
 
@@ -128,36 +133,99 @@ def render_phrase(name: str, dials: Dials, seed: str, bars: int = 8,
 # each named for the musical character it's meant to test.
 # ------------------------------------------------------------------
 PRESETS = {
-    "minimal_dub": Dials(harmony_gravity=0.85, harmony_color=0.15, groove_energy=0.08,
-                          groove_swing=0.55, motion_contour=0.0, motion_variation=0.1,
-                          voice_sweep=0.3, voice_artic=0.2),
-    "dense_acid": Dials(harmony_gravity=0.35, harmony_color=0.55, groove_energy=0.95,
-                         groove_swing=0.2, motion_contour=0.62, motion_variation=0.75,
-                         voice_sweep=0.85, voice_artic=0.8),
-    "melodic_arch": Dials(harmony_gravity=0.7, harmony_color=0.4, groove_energy=0.45,
-                           groove_swing=0.3, motion_contour=0.42, motion_variation=0.4,
-                           voice_sweep=0.5, voice_artic=0.35),
-    "sparse_sub_groove": Dials(harmony_gravity=0.9, harmony_color=0.05, groove_energy=0.2,
-                                groove_swing=0.65, motion_contour=0.0, motion_variation=0.05,
-                                voice_sweep=0.2, voice_artic=0.15),
-    "wandering_modal": Dials(harmony_gravity=0.25, harmony_color=0.85, groove_energy=0.5,
-                              groove_swing=0.4, motion_contour=0.75, motion_variation=0.6,
-                              voice_sweep=0.55, voice_artic=0.4),
-    "high_energy_garage": Dials(harmony_gravity=0.55, harmony_color=0.6, groove_energy=0.65,
-                                 groove_swing=0.7, motion_contour=0.87, motion_variation=0.55,
-                                 voice_sweep=0.6, voice_artic=0.65),
-    "slow_swing_deep": Dials(harmony_gravity=0.8, harmony_color=0.2, groove_energy=0.15,
-                              groove_swing=0.75, motion_contour=0.25, motion_variation=0.2,
-                              voice_sweep=0.35, voice_artic=0.3),
-    "chaos_max_variation": Dials(harmony_gravity=0.2, harmony_color=0.95, groove_energy=0.8,
-                                  groove_swing=0.9, motion_contour=1.0, motion_variation=1.0,
-                                  voice_sweep=1.0, voice_artic=1.0),
+    "minimal_dub": Dials(
+        harmony_gravity=0.85,
+        harmony_color=0.15,
+        groove_energy=0.08,
+        groove_swing=0.55,
+        motion_contour=0.0,
+        motion_variation=0.1,
+        voice_sweep=0.3,
+        voice_artic=0.2,
+    ),
+    "dense_acid": Dials(
+        harmony_gravity=0.35,
+        harmony_color=0.55,
+        groove_energy=0.95,
+        groove_swing=0.2,
+        motion_contour=0.62,
+        motion_variation=0.75,
+        voice_sweep=0.85,
+        voice_artic=0.8,
+    ),
+    "melodic_arch": Dials(
+        harmony_gravity=0.7,
+        harmony_color=0.4,
+        groove_energy=0.45,
+        groove_swing=0.3,
+        motion_contour=0.42,
+        motion_variation=0.4,
+        voice_sweep=0.5,
+        voice_artic=0.35,
+    ),
+    "sparse_sub_groove": Dials(
+        harmony_gravity=0.9,
+        harmony_color=0.05,
+        groove_energy=0.2,
+        groove_swing=0.65,
+        motion_contour=0.0,
+        motion_variation=0.05,
+        voice_sweep=0.2,
+        voice_artic=0.15,
+    ),
+    "wandering_modal": Dials(
+        harmony_gravity=0.25,
+        harmony_color=0.85,
+        groove_energy=0.5,
+        groove_swing=0.4,
+        motion_contour=0.75,
+        motion_variation=0.6,
+        voice_sweep=0.55,
+        voice_artic=0.4,
+    ),
+    "high_energy_garage": Dials(
+        harmony_gravity=0.55,
+        harmony_color=0.6,
+        groove_energy=0.65,
+        groove_swing=0.7,
+        motion_contour=0.87,
+        motion_variation=0.55,
+        voice_sweep=0.6,
+        voice_artic=0.65,
+    ),
+    "slow_swing_deep": Dials(
+        harmony_gravity=0.8,
+        harmony_color=0.2,
+        groove_energy=0.15,
+        groove_swing=0.75,
+        motion_contour=0.25,
+        motion_variation=0.2,
+        voice_sweep=0.35,
+        voice_artic=0.3,
+    ),
+    "chaos_max_variation": Dials(
+        harmony_gravity=0.2,
+        harmony_color=0.95,
+        groove_energy=0.8,
+        groove_swing=0.9,
+        motion_contour=1.0,
+        motion_variation=1.0,
+        voice_sweep=1.0,
+        voice_artic=1.0,
+    ),
     "default_boot": Dials(),  # what the firmware will boot with
     "all_zero": Dials(0, 0, 0, 0, 0, 0, 0, 0),
     "all_one": Dials(1, 1, 1, 1, 1, 1, 1, 1),
-    "techno_roll_energy": Dials(harmony_gravity=0.6, harmony_color=0.5, groove_energy=1.0,
-                                 groove_swing=0.1, motion_contour=0.5, motion_variation=0.3,
-                                 voice_sweep=0.7, voice_artic=0.5),
+    "techno_roll_energy": Dials(
+        harmony_gravity=0.6,
+        harmony_color=0.5,
+        groove_energy=1.0,
+        groove_swing=0.1,
+        motion_contour=0.5,
+        motion_variation=0.3,
+        voice_sweep=0.7,
+        voice_artic=0.5,
+    ),
 }
 
 
@@ -166,10 +234,12 @@ def main():
     print(f"Rendering {len(PRESETS)} curated presets...")
     for name, dials in PRESETS.items():
         r = render_phrase(name, dials, seed=f"seed-{name}", bars=8)
-        print(f"  {name:22s} notes={r['metrics'].get('n_notes'):3d} "
-              f"chordTone={r['metrics'].get('chord_tone_pct'):5.1f}% "
-              f"sync={r['metrics'].get('syncopation_pct'):5.1f}% "
-              f"scale={r['scale']}")
+        print(
+            f"  {name:22s} notes={r['metrics'].get('n_notes'):3d} "
+            f"chordTone={r['metrics'].get('chord_tone_pct'):5.1f}% "
+            f"sync={r['metrics'].get('syncopation_pct'):5.1f}% "
+            f"scale={r['scale']}"
+        )
         results.append(r)
 
     print("Rendering 24 random-sweep samples...")
@@ -178,9 +248,11 @@ def main():
         dials = Dials(*[rnd.random() for _ in range(8)])
         name = f"random_{i:02d}"
         r = render_phrase(name, dials, seed=f"seed-{name}", bars=8)
-        print(f"  {name:22s} notes={r['metrics'].get('n_notes'):3d} "
-              f"chordTone={r['metrics'].get('chord_tone_pct'):5.1f}% "
-              f"sync={r['metrics'].get('syncopation_pct'):5.1f}%")
+        print(
+            f"  {name:22s} notes={r['metrics'].get('n_notes'):3d} "
+            f"chordTone={r['metrics'].get('chord_tone_pct'):5.1f}% "
+            f"sync={r['metrics'].get('syncopation_pct'):5.1f}%"
+        )
         results.append(r)
 
     with open(os.path.join(OUT_DIR, "experiments.json"), "w") as f:
@@ -202,34 +274,47 @@ def write_report(results):
         "`esp-idf-link/main/bassline_interpreter.*`.\n"
     )
     lines.append("## Curated presets\n")
-    lines.append("| name | scale | notes | chord-tone% | syncopation% | mean interval | accent% | ghost% | slide% |")
+    lines.append(
+        "| name | scale | notes | chord-tone% | syncopation% | mean interval | accent% | ghost% | slide% |"
+    )
     lines.append("|---|---|---|---|---|---|---|---|---|")
     for r in results:
         if not r["name"].startswith("random_"):
             m = r["metrics"]
-            lines.append(f"| {r['name']} | {r['scale']} | {m.get('n_notes')} | "
-                          f"{m.get('chord_tone_pct')} | {m.get('syncopation_pct')} | "
-                          f"{m.get('mean_interval_st')} | {m.get('accent_pct')} | "
-                          f"{m.get('ghost_pct')} | {m.get('slide_pct')} |")
+            lines.append(
+                f"| {r['name']} | {r['scale']} | {m.get('n_notes')} | "
+                f"{m.get('chord_tone_pct')} | {m.get('syncopation_pct')} | "
+                f"{m.get('mean_interval_st')} | {m.get('accent_pct')} | "
+                f"{m.get('ghost_pct')} | {m.get('slide_pct')} |"
+            )
 
     randoms = [r for r in results if r["name"].startswith("random_")]
     if randoms:
         import statistics as st
+
         note_counts = [r["metrics"]["n_notes"] for r in randoms]
         chord_pcts = [r["metrics"]["chord_tone_pct"] for r in randoms]
         sync_pcts = [r["metrics"]["syncopation_pct"] for r in randoms]
         lines.append("\n## Random-sweep coverage (24 uniform-random dial draws)\n")
-        lines.append(f"- note count: min {min(note_counts)}, max {max(note_counts)}, "
-                      f"mean {st.mean(note_counts):.1f}")
-        lines.append(f"- chord-tone%: min {min(chord_pcts):.1f}, max {max(chord_pcts):.1f}, "
-                      f"mean {st.mean(chord_pcts):.1f}")
-        lines.append(f"- syncopation%: min {min(sync_pcts):.1f}, max {max(sync_pcts):.1f}, "
-                      f"mean {st.mean(sync_pcts):.1f}")
-        lines.append("- No random draw produced an empty phrase, an out-of-range MIDI "
-                      "note, or a degenerate (silent/1-note) pattern across 500 "
-                      "additional dial combinations tested in the stress pass "
-                      "(see conversation/session notes) -- the parameter space has "
-                      "no dead zones.")
+        lines.append(
+            f"- note count: min {min(note_counts)}, max {max(note_counts)}, "
+            f"mean {st.mean(note_counts):.1f}"
+        )
+        lines.append(
+            f"- chord-tone%: min {min(chord_pcts):.1f}, max {max(chord_pcts):.1f}, "
+            f"mean {st.mean(chord_pcts):.1f}"
+        )
+        lines.append(
+            f"- syncopation%: min {min(sync_pcts):.1f}, max {max(sync_pcts):.1f}, "
+            f"mean {st.mean(sync_pcts):.1f}"
+        )
+        lines.append(
+            "- No random draw produced an empty phrase, an out-of-range MIDI "
+            "note, or a degenerate (silent/1-note) pattern across 500 "
+            "additional dial combinations tested in the stress pass "
+            "(see conversation/session notes) -- the parameter space has "
+            "no dead zones."
+        )
 
     lines.append("\n## Findings that shaped the embedded design\n")
     lines.append(
